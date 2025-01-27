@@ -3,7 +3,7 @@
 
 
 import os
-from os import environ,getenv
+from os import environ
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -45,13 +45,6 @@ FORCE_PIC = os.environ.get("FORCE_PIC", "https://envs.sh/awN.jpg")
 
 # Turn this feature on or off using True or False; put the value inside ""
 # TRUE for yes, FALSE for no
-
-TOKEN = os.environ.get('TOKEN', "False").lower() == "true"  # Currently "False", so TOKEN will be off
-SHORTLINK_URL = os.environ.get("SHORTLINK_URL", "publicearn.online")
-SHORTLINK_API = os.environ.get("SHORTLINK_API", "adabe1c0675be8ffc5ccbc84a9a65bc5a5d3ec69")
-VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', 600))  # Add time in seconds
-IS_VERIFY = os.environ.get("IS_VERIFY", "False").lower() == "true"  # Also off since default is "False"
-TUT_VID = os.environ.get("TUT_VID", "https://t.me/hwdownload/3")
 
 
 HELP_TXT = "<b>If you can't use me or don't get any files, it's mean you don't join either <a href=https://t.me/+LGPS4EDPWLA2YTM1>AIO J*v</a> or <a href=https://t.me/AIO_Backup>AIO Backup</a>. First Join These Channels Then retry.</b>"
