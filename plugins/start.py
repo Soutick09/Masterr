@@ -7,13 +7,11 @@ import random
 import sys
 import time
 import string
-import string as rohit
 import humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from bot import Bot
 from config import *
 from helper_func import *
@@ -26,51 +24,6 @@ TUT_VID = f"{TUT_VID}"
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
     id = message.from_user.id
-
-    # Check if user is an admin and treat them as verified
-    if id in ADMINS:
-        verify_status = {
-            'is_verified': True,
-            'verify_token': None,  # Admins don't need a token
-            'verified_time': time.time(),
-            'link': ""
-        }
-    else:
-        verify_status = await get_verify_status(id)
-
-        # If TOKEN is enabled, handle verification logic
-        if TOKEN:
-            if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
-                await update_verify_status(id, is_verified=False)
-
-            if "verify_" in message.text:
-                _, token = message.text.split("_", 1)
-                if verify_status['verify_token'] != token:
-                    return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
-                await update_verify_status(id, is_verified=True, verified_time=time.time())
-                if verify_status["link"] == "":
-                    reply_markup = None
-                return await message.reply(
-                    f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
-                    reply_markup=reply_markup,
-                    protect_content=False,
-                    quote=True
-                )
-
-            if not verify_status['is_verified']:
-                token = ''.join(random.choices(rohit.ascii_letters + rohit.digits, k=10))
-                await update_verify_status(id, verify_token=token, link="")
-                link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
-                btn = [
-                    [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
-                    [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
-                ]
-                return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
-                    reply_markup=InlineKeyboardMarkup(btn),
-                    protect_content=False,
-                    quote=True
-                )
 
     # Handle normal message flow
     text = message.text
@@ -164,14 +117,14 @@ async def start_command(client: Client, message: Message):
     else:
         reply_markup = InlineKeyboardMarkup(
             [
-                    [
-                        InlineKeyboardButton("🔥 Join Backup Channel", url = "https://t.me/AIO_Backup"),
-                    ],
-                    [
-                    InlineKeyboardButton("😍 About", callback_data = "about"),
-                    InlineKeyboardButton('🔒 Close', callback_data ='close')
-                    ]
+                [
+                    InlineKeyboardButton("🔥 Join Backup Channel", url="https://t.me/AIO_Backup"),
+                ],
+                [
+                    InlineKeyboardButton("😍 About", callback_data="about"),
+                    InlineKeyboardButton('🔒 Close', callback_data='close')
                 ]
+            ]
         )
         await message.reply_photo(
             photo=START_PIC,
@@ -182,11 +135,9 @@ async def start_command(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=reply_markup#,
-            #message_effect_id=5104841245755180586  # 🔥
+            reply_markup=reply_markup
         )
         return
-
 
 
 #=====================================================================================##
@@ -204,35 +155,29 @@ async def not_joined(client: Client, message: Message):
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink1),
             InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
         ])
-    # Check if only the first channel is set
     elif FORCE_SUB_CHANNEL1:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink1)
         ])
-    # Check if only the second channel is set
     elif FORCE_SUB_CHANNEL2:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink2)
         ])
 
-    # Check if the third and fourth channels are set
     if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
             InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
         ])
-    # Check if only the first channel is set
     elif FORCE_SUB_CHANNEL3:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink3)
         ])
-    # Check if only the second channel is set
     elif FORCE_SUB_CHANNEL4:
         buttons.append([
             InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink4)
         ])
 
-    # Append "Try Again" button if the command has a second argument
     try:
         buttons.append([
             InlineKeyboardButton(
@@ -241,20 +186,19 @@ async def not_joined(client: Client, message: Message):
             )
         ])
     except IndexError:
-        pass  # Ignore if no second argument is present
+        pass
 
     await message.reply_photo(
         photo=FORCE_PIC,
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons)#,
-    #message_effect_id=5104841245755180586  # Add the effect ID here
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
 
 #=====================================================================================##
@@ -264,7 +208,6 @@ WAIT_MSG = "<b>Working....</b>"
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
 
 #=====================================================================================##
-
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
