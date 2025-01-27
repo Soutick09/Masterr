@@ -58,7 +58,7 @@ ABOUT_TXT = "<b>• Creator: <a href=https://t.me/Soutick_09>Soutick</a>\n• Ba
 START_MSG = os.environ.get("START_MESSAGE", "<b>Hello!! {mention} 👋! I'm Alya.\n\nI'm here to provide you adult contents for Free 😄\n\n© @AIO_Backup</b>")
 try:
     ADMINS=[5827289728]
-    for x in (os.environ.get("ADMINS", "5413708222 7272399911").split()):
+    for x in (os.environ.get("ADMINS", "7272399911").split()):
         ADMINS.append(int(x))
 except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
