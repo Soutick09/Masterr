@@ -164,13 +164,14 @@ async def start_command(client: Client, message: Message):
     else:
         reply_markup = InlineKeyboardMarkup(
             [
-
-    [
-                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data = "about"),
-                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
-
-    ]
-            ]
+                    [
+                        InlineKeyboardButton("🔥 Join Backup Channel", url = "https://t.me/AIO_Backup"),
+                    ],
+                    [
+                    InlineKeyboardButton("😍 About", callback_data = "about"),
+                    InlineKeyboardButton('🔒 Close', callback_data ='close')
+                    ]
+                ]
         )
         await message.reply_photo(
             photo=START_PIC,
@@ -302,13 +303,13 @@ async def send_text(client: Bot, message: Message):
                 pass
             total += 1
 
-        status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀꜱᴛ...</u>
+        status = f"""<b><u>🚀 Broadcast Completed</u></b>
 
-Total Users: <code>{total}</code>
-Successful: <code>{successful}</code>
-Blocked Users: <code>{blocked}</code>
-Deleted Accounts: <code>{deleted}</code>
-Unsuccessful: <code>{unsuccessful}</code></b>"""
+<b>😍 Total Users :</b> <code>{total}</code>
+<b>😁 Successful :</b> <code>{successful}</code>
+<b>😒 Blocked Users :</b> <code>{blocked}</code>
+<b>😢 Deleted Accounts :</b> <code>{deleted}</code>
+<b>😔 Unsuccessful :</b> <code>{unsuccessful}</code>"""
 
         return await pls_wait.edit(status)
 
